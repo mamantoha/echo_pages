@@ -1,0 +1,9 @@
+/docs/
+/lib/
+/bin/
+/log/
+/.shards/
+.env
+.DS_Store
+.cache
+/db/echo_pages.db
