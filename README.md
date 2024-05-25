@@ -4,6 +4,11 @@
 It allows users to submit HTML content and receive a unique URL to access it, making it ideal for sharing and testing HTML snippets.
 The service utilizes SQLite as its database backend.
 
+## Requirements
+
+- **Crystal Programming Language**: Make sure you have Crystal installed on your system. For installation instructions, visit [Crystal Installation Guide](https://crystal-lang.org/install/).
+- **SQLite**: This project uses SQLite. Ensure SQLite3 is installed and accessible in your environment.
+
 ## Contributing
 
 1. Fork it (<https://github.com/mamantoha/echo_pages/fork>)
