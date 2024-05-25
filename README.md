@@ -1,6 +1,8 @@
-# Echo Pages
+# EchoPages
 
-Submit your HTML and instantly receive a URL to access it. Simple, fast, and reliable.
+`EchoPages` is a simple yet powerful web service built with the Crystal programming language.
+It allows users to submit HTML content and receive a unique URL to access it, making it ideal for sharing and testing HTML snippets.
+The service utilizes SQLite as its database backend.
 
 ## Contributing
 
