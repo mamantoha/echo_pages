@@ -1,7 +1,7 @@
 # EchoPages
 
-`EchoPages` is a simple yet powerful web service built with the Crystal programming language.
-It allows users to submit HTML content and receive a unique URL to access it, making it ideal for sharing and testing HTML snippets.
+`EchoPages` is a simple web service built with the Crystal programming language.
+It allows users to submit HTML content and receive a unique URL to access it, making it possible for sharing and testing HTML snippets.
 The service utilizes SQLite as its database backend.
 
 ## Requirements
