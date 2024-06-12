@@ -24,7 +24,7 @@ server = HTTP::Server.new do |context|
     uuid = $1
 
     if html_content = db_handler.get_html(uuid)
-      context.response.content_type = "text/html"
+      context.response.content_type = "text/html; charset=utf-8"
       context.response.print html_content
     else
       context.response.respond_with_status(:not_found, "Page not found")
