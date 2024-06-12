@@ -53,6 +53,12 @@ class DBHandler
     end
   end
 
+  def update_html(uuid : String, content : String)
+    DB.open(DB_PATH) do |db|
+      db.exec("UPDATE #{TABLE} SET html_content = ? WHERE id = ?", content, uuid)
+    end
+  end
+
   def get_html(uuid : String) : String?
     DB.open(DB_PATH) do |db|
       db.query_one?("SELECT html_content FROM #{TABLE} WHERE id = ?", uuid, as: String)
