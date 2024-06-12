@@ -26,6 +26,23 @@ class DBHandler
     end
   end
 
+  def pages : Array(NamedTuple(id: String, created_at: Time))
+    pages = [] of NamedTuple(id: String, created_at: Time)
+
+    DB.open(DB_PATH) do |db|
+      db.query("SELECT id, created_at FROM #{TABLE} ORDER BY created_at DESC") do |rs|
+        rs.each do
+          id = rs.read(String)
+          created_at = rs.read(Time)
+
+          pages << {id: id, created_at: created_at}
+        end
+      end
+    end
+
+    pages
+  end
+
   def save_html(content : String) : String
     uuid = UUID.random.to_s
 

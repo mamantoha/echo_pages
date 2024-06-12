@@ -1,3 +1,4 @@
+require "ecr"
 require "uuid"
 require "http/server"
 require "./db"
@@ -17,29 +18,15 @@ server = HTTP::Server.new do |context|
         context.response.print "Bad Request: No body provided"
       end
     else
-      context.response.print <<-HTML
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-          <meta charset="UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>EchoPages</title>
-        </head>
-        <body>
-          <header>
-            <h2>Submit your HTML and instantly receive a URL to access it.</h2>
-          </header>
-          <main>
-            <form action="/" method="post">
-              <textarea name="html_content" rows="10" cols="50"></textarea><br>
-              <input type="submit" value="Submit HTML">
-            </form>
-          </main>
-          <footer>
-            <p>Build with Crystal #{Crystal::VERSION} © 2024</p>
-          </footer>
-        </body>
-      HTML
+      context.response.print ECR.render("#{__DIR__}/views/index.ecr")
+    end
+  when "/pages"
+    if context.request.method == "GET"
+      pages = db_handler.pages
+
+      context.response.print ECR.render("#{__DIR__}/views/pages.ecr")
+    else
+      context.response.respond_with_status(:not_found)
     end
   when /\/pages\/(.*)/
     uuid = $1
