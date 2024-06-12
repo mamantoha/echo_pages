@@ -20,15 +20,7 @@ server = HTTP::Server.new do |context|
     else
       context.response.print ECR.render("#{__DIR__}/views/index.ecr")
     end
-  when "/pages"
-    if context.request.method == "GET"
-      pages = db_handler.pages
-
-      context.response.print ECR.render("#{__DIR__}/views/pages.ecr")
-    else
-      context.response.respond_with_status(:not_found)
-    end
-  when /\/pages\/(.*)/
+  when /^\/pages\/(.*)/
     uuid = $1
 
     if html_content = db_handler.get_html(uuid)
@@ -37,6 +29,14 @@ server = HTTP::Server.new do |context|
     else
       context.response.status_code = 404
       context.response.print "Page not found"
+    end
+  when /^\/admin\/pages(\/)?$/
+    if context.request.method == "GET"
+      pages = db_handler.pages
+
+      context.response.print ECR.render("#{__DIR__}/views/admin/pages/index.ecr")
+    else
+      context.response.respond_with_status(:not_found)
     end
   else
     context.response.respond_with_status(:not_found)
