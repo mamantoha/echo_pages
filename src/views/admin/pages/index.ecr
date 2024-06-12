@@ -1,34 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EchoPages</title>
-</head>
-<body>
-  <h1>Pages</h1>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EchoPages</title>
+  </head>
+  <body>
+    <h1>Pages</h1>
 
-  <table>
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Created at</th>
-        <th colspan="2"></th>
-      </tr>
-    </thead>
-    <tbody>
-      <%- pages.each do |page| -%>
+    <table>
+      <thead>
         <tr>
-          <td><%= page[:id] %></td>
-          <td><%= page[:created_at] %></td>
-          <td><a href="/pages/<%= page[:id]%>">Show</a></td>
-          <td><a href="/admin/pages/<%= page[:id]%>/edit">Edit</a></td>
+          <th>ID</th>
+          <th>Created at</th>
+          <th colspan="2"></th>
         </tr>
-      <%- end -%>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        <%- pages.each do |page| -%>
+          <tr>
+            <td><%= page[:id] %></td>
+            <td><%= page[:created_at] %></td>
+            <td><a href="/pages/<%= page[:id]%>">Show</a></td>
+            <td><a href="/admin/pages/<%= page[:id]%>/edit">Edit</a></td>
+          </tr>
+        <%- end -%>
+      </tbody>
+    </table>
 
-  <footer>
-    <p>Build with Crystal <%= Crystal::VERSION %> © 2024</p>
-  </footer>
-</body>
+    <footer>
+      <p>Build with Crystal <%= Crystal::VERSION %> © 2024</p>
+    </footer>
+  </body>
+</html>
