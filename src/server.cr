@@ -9,7 +9,8 @@ db_handler = DBHandler.new
 server = HTTP::Server.new do |context|
   case context.request.path
   when "/"
-    if context.request.method == "POST"
+    case context.request.method
+    when "POST"
       if html_content = context.request.form_params["html_content"]
         id = db_handler.save_html(html_content)
 
@@ -17,13 +18,14 @@ server = HTTP::Server.new do |context|
       else
         context.response.respond_with_status(:bad_request, "Bad Request: No body provided")
       end
-    elsif context.request.method == "GET"
+    when "GET"
       context.response.print ECR.render("#{__DIR__}/views/index.ecr")
     else
       context.response.respond_with_status(:method_not_allowed)
     end
   when /^\/pages\/(.*)/
-    if context.request.method == "GET"
+    case context.request.method
+    when "GET"
       uuid = $1
 
       if html_content = db_handler.get_html(uuid)
@@ -36,7 +38,8 @@ server = HTTP::Server.new do |context|
       context.response.respond_with_status(:method_not_allowed)
     end
   when /^\/admin\/pages(\/)?$/
-    if context.request.method == "GET"
+    case context.request.method
+    when "GET"
       pages = db_handler.pages
 
       context.response.print ECR.render("#{__DIR__}/views/admin/pages/index.ecr")
@@ -44,7 +47,8 @@ server = HTTP::Server.new do |context|
       context.response.respond_with_status(:method_not_allowed)
     end
   when /^\/admin\/pages\/(.*)\/edit(\/)?$/
-    if context.request.method == "GET"
+    case context.request.method
+    when "GET"
       uuid = $1
 
       if html_content = db_handler.get_html(uuid)
@@ -56,7 +60,8 @@ server = HTTP::Server.new do |context|
       context.response.respond_with_status(:method_not_allowed)
     end
   when /^\/admin\/pages\/(.*)\/delete(\/)?$/
-    if context.request.method == "POST"
+    case context.request.method
+    when "POST"
       uuid = $1
 
       db_handler.delete_html_page(uuid)
@@ -65,7 +70,8 @@ server = HTTP::Server.new do |context|
       context.response.respond_with_status(:method_not_allowed)
     end
   when /^\/admin\/pages\/(.*)(\/)?$/
-    if context.request.method == "POST"
+    case context.request.method
+    when "POST"
       uuid = $1
 
       if html_content = context.request.form_params["html_content"]
