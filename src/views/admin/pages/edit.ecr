@@ -9,7 +9,7 @@
     <h1>Editing Page</h1>
 
     <form action="/admin/pages/<%= uuid%>" method="post">
-      <textarea name="html_content" rows="10" cols="50"><%= HTML.escape(html_content) %></textarea>
+      <textarea name="content" rows="10" cols="50"><%= HTML.escape(content) %></textarea>
       <br>
       <input type="submit" value="Update">
     </form>
