@@ -31,9 +31,9 @@ server = HTTP::Server.new do |context|
     when "GET"
       id = $1
 
-      if page = db_handler.get_page(id)
+      if page = db_handler.page(id)
         context.response.content_type = "text/html; charset=utf-8"
-        context.response.print page[:content]
+        context.response.print page.content
       else
         context.response.respond_with_status(:not_found, "Page not found")
       end
@@ -54,7 +54,7 @@ server = HTTP::Server.new do |context|
     when "GET"
       id = $1
 
-      if page = db_handler.get_page(id)
+      if page = db_handler.page(id)
         context.response.print ECR.render("#{__DIR__}/views/admin/pages/edit.ecr")
       else
         context.response.respond_with_status(:not_found, "Page not found")

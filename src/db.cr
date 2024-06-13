@@ -1,5 +1,14 @@
 require "sqlite3"
 
+class Page
+  include DB::Serializable
+
+  property id : String
+  property title : String
+  property content : String
+  property created_at : Time
+end
+
 class DBHandler
   DB_PATH = "sqlite3://#{__DIR__}/../db/echo_pages.db"
   TABLE   = "pages"
@@ -27,12 +36,19 @@ class DBHandler
     end
   end
 
-  def pages : Array(NamedTuple(id: String, title: String, created_at: Time))
+  def pages : Array(Page)
     DB.open(DB_PATH) do |db|
-      db.query_all(
-        "SELECT id, title, created_at FROM #{TABLE} ORDER BY created_at DESC",
-        as: {id: String, title: String, created_at: Time}
+      rs = db.query(
+        "SELECT id, title, content, created_at FROM #{TABLE} ORDER BY created_at DESC"
       )
+
+      Page.from_rs(rs)
+    end
+  end
+
+  def page(id : String) : Page?
+    DB.open(DB_PATH) do |db|
+      db.query_one?("SELECT id, title, content, created_at FROM #{TABLE} WHERE id = ?", id, as: Page)
     end
   end
 
@@ -50,12 +66,6 @@ class DBHandler
   def update_page(id : String, title : String, content : String) : DB::ExecResult
     DB.open(DB_PATH) do |db|
       db.exec("UPDATE #{TABLE} SET title = ?, content = ? WHERE id = ?", title, content, id)
-    end
-  end
-
-  def get_page(id : String) : NamedTuple(title: String, content: String)?
-    DB.open(DB_PATH) do |db|
-      db.query_one?("SELECT title, content FROM #{TABLE} WHERE id = ?", id, as: {title: String, content: String})
     end
   end
 
