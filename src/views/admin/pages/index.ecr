@@ -19,6 +19,16 @@
       tr:nth-child(even) {
         background-color: #f2f2f2;
       }
+      .delete-link {
+        background: none;
+        color: blue;
+        border: none;
+        cursor: pointer;
+        text-decoration: underline;
+        font-size: inherit;
+        padding: 0;
+      }
+
     </style>
   </head>
   <body>
@@ -29,7 +39,7 @@
         <tr>
           <th>ID</th>
           <th>Created at</th>
-          <th colspan="2"></th>
+          <th colspan="3"></th>
         </tr>
       </thead>
       <tbody>
@@ -41,7 +51,7 @@
             <td><a href="/admin/pages/<%= page[:id]%>/edit">Edit</a></td>
             <td>
               <form action="/admin/pages/<%= page[:id] %>/delete" method="post">
-                <input type="submit" value="Delete Page" onclick="return confirm('Are you sure you want to delete this page?');">
+                <input type="submit" class="delete-link" value="Delete" onclick="return confirm('Are you sure you want to delete this page?');">
               </form>
             </td>
           </tr>
