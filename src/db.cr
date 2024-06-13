@@ -48,12 +48,13 @@ class DBHandler
 
     DB.open(DB_PATH) do |db|
       db.exec("INSERT INTO #{TABLE} (id, html_content) values (?, ?)", uuid, content)
-
-      uuid
     end
+    # => DB::ExecResult(@rows_affected=1, @last_insert_id=6)
+
+    uuid
   end
 
-  def update_html(uuid : String, content : String)
+  def update_html(uuid : String, content : String) : DB::ExecResult
     DB.open(DB_PATH) do |db|
       db.exec("UPDATE #{TABLE} SET html_content = ? WHERE id = ?", content, uuid)
     end
@@ -63,5 +64,12 @@ class DBHandler
     DB.open(DB_PATH) do |db|
       db.query_one?("SELECT html_content FROM #{TABLE} WHERE id = ?", uuid, as: String)
     end
+  end
+
+  def delete_html_page(uuid) : DB::ExecResult
+    DB.open(DB_PATH) do |db|
+      db.exec("DELETE FROM html_pages WHERE id = ?", uuid)
+    end
+    # => DB::ExecResult(@rows_affected=1, @last_insert_id=0)
   end
 end

@@ -17,17 +17,23 @@ server = HTTP::Server.new do |context|
       else
         context.response.respond_with_status(:bad_request, "Bad Request: No body provided")
       end
-    else
+    elsif context.request.method == "GET"
       context.response.print ECR.render("#{__DIR__}/views/index.ecr")
+    else
+      context.response.respond_with_status(:method_not_allowed)
     end
   when /^\/pages\/(.*)/
-    uuid = $1
+    if context.request.method == "GET"
+      uuid = $1
 
-    if html_content = db_handler.get_html(uuid)
-      context.response.content_type = "text/html; charset=utf-8"
-      context.response.print html_content
+      if html_content = db_handler.get_html(uuid)
+        context.response.content_type = "text/html; charset=utf-8"
+        context.response.print html_content
+      else
+        context.response.respond_with_status(:not_found, "Page not found")
+      end
     else
-      context.response.respond_with_status(:not_found, "Page not found")
+      context.response.respond_with_status(:method_not_allowed)
     end
   when /^\/admin\/pages(\/)?$/
     if context.request.method == "GET"
@@ -35,7 +41,7 @@ server = HTTP::Server.new do |context|
 
       context.response.print ECR.render("#{__DIR__}/views/admin/pages/index.ecr")
     else
-      context.response.respond_with_status(:not_found)
+      context.response.respond_with_status(:method_not_allowed)
     end
   when /^\/admin\/pages\/(.*)\/edit(\/)?$/
     if context.request.method == "GET"
@@ -47,7 +53,16 @@ server = HTTP::Server.new do |context|
         context.response.respond_with_status(:not_found, "Page not found")
       end
     else
-      context.response.respond_with_status(:not_found)
+      context.response.respond_with_status(:method_not_allowed)
+    end
+  when /^\/admin\/pages\/(.*)\/delete(\/)?$/
+    if context.request.method == "POST"
+      uuid = $1
+
+      db_handler.delete_html_page(uuid)
+      context.response.redirect("/admin/pages")
+    else
+      context.response.respond_with_status(:method_not_allowed)
     end
   when /^\/admin\/pages\/(.*)(\/)?$/
     if context.request.method == "POST"
@@ -59,7 +74,7 @@ server = HTTP::Server.new do |context|
         context.response.redirect("/pages/#{uuid}")
       end
     else
-      context.response.respond_with_status(:not_found)
+      context.response.respond_with_status(:method_not_allowed)
     end
   else
     context.response.respond_with_status(:not_found)
