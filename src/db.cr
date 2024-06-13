@@ -36,10 +36,13 @@ class DBHandler
     end
   end
 
-  def pages : Array(Page)
+  def pages(page : Int32, per_page : Int32) : Array(Page)
+    offset = (page - 1) * per_page
+
     DB.open(DB_PATH) do |db|
       rs = db.query(
-        "SELECT id, title, content, created_at FROM #{TABLE} ORDER BY created_at DESC"
+        "SELECT id, title, content, created_at FROM #{TABLE} ORDER BY created_at DESC LIMIT ? OFFSET ?",
+        per_page, offset
       )
 
       Page.from_rs(rs)
@@ -52,11 +55,17 @@ class DBHandler
     end
   end
 
+  def pages_count : Int64
+    DB.open(DB_PATH) do |db|
+      db.scalar("SELECT COUNT(*) FROM #{TABLE}").as(Int64)
+    end
+  end
+
   def create_page(title : String, content : String) : String
     id = UUID.random.to_s
 
     DB.open(DB_PATH) do |db|
-      db.exec("INSERT INTO #{TABLE} (id, title, content) values (?, ?, ?)", id, title, content)
+      db.exec("INSERT INTO #{TABLE} (id, title, content) VALUES (?, ?, ?)", id, title, content)
     end
     # => DB::ExecResult(@rows_affected=1, @last_insert_id=6)
 

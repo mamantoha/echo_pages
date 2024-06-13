@@ -43,9 +43,24 @@ server = HTTP::Server.new do |context|
   when /^\/admin\/pages(\/)?$/
     case context.request.method
     when "GET"
-      pages = db_handler.pages
+      current_page = (context.request.query_params["page"]? || "1").to_i
 
-      context.response.print ECR.render("#{__DIR__}/views/admin/pages/index.ecr")
+      if current_page < 1
+        context.response.respond_with_status(:not_found)
+      else
+        total_entries = db_handler.pages_count
+        per_page = 100
+
+        total_pages = (total_entries // per_page) + (total_entries % per_page > 0 ? 1 : 0)
+
+        pages = db_handler.pages(current_page, per_page)
+
+        if pages.empty?
+          context.response.respond_with_status(:not_found)
+        else
+          context.response.print ECR.render("#{__DIR__}/views/admin/pages/index.ecr")
+        end
+      end
     else
       context.response.respond_with_status(:method_not_allowed)
     end

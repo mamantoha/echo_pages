@@ -34,6 +34,22 @@
   <body>
     <h1>Pages</h1>
 
+    <% if total_entries > per_page %>
+      <div>
+        <% if current_page > 1 %>
+          <a href="/admin/pages?page=<%= current_page - 1 %>">Previous</a>
+        <% else %>
+          <a role="link" aria-disabled="true">Previous</a>
+        <% end %>
+
+        <% if current_page < total_pages %>
+          <a href="/admin/pages?page=<%= current_page + 1 %>">Next</a>
+        <% else %>
+          <a role="link" aria-disabled="true">Next</a>
+        <% end %>
+      </div>
+    <% end %>
+
     <table>
       <thead>
         <tr>
