@@ -37,31 +37,31 @@ class DBHandler
   end
 
   def create_page(title : String, content : String) : String
-    uuid = UUID.random.to_s
+    id = UUID.random.to_s
 
     DB.open(DB_PATH) do |db|
-      db.exec("INSERT INTO #{TABLE} (id, title, content) values (?, ?, ?)", uuid, title, content)
+      db.exec("INSERT INTO #{TABLE} (id, title, content) values (?, ?, ?)", id, title, content)
     end
     # => DB::ExecResult(@rows_affected=1, @last_insert_id=6)
 
-    uuid
+    id
   end
 
-  def update_page(uuid : String, title : String, content : String) : DB::ExecResult
+  def update_page(id : String, title : String, content : String) : DB::ExecResult
     DB.open(DB_PATH) do |db|
-      db.exec("UPDATE #{TABLE} SET title = ?, content = ? WHERE id = ?", title, content, uuid)
+      db.exec("UPDATE #{TABLE} SET title = ?, content = ? WHERE id = ?", title, content, id)
     end
   end
 
-  def get_page(uuid : String) : NamedTuple(title: String, content: String)?
+  def get_page(id : String) : NamedTuple(title: String, content: String)?
     DB.open(DB_PATH) do |db|
-      db.query_one?("SELECT title, content FROM #{TABLE} WHERE id = ?", uuid, as: {title: String, content: String})
+      db.query_one?("SELECT title, content FROM #{TABLE} WHERE id = ?", id, as: {title: String, content: String})
     end
   end
 
-  def delete_page(uuid) : DB::ExecResult
+  def delete_page(id) : DB::ExecResult
     DB.open(DB_PATH) do |db|
-      db.exec("DELETE FROM #{TABLE} WHERE id = ?", uuid)
+      db.exec("DELETE FROM #{TABLE} WHERE id = ?", id)
     end
     # => DB::ExecResult(@rows_affected=1, @last_insert_id=0)
   end

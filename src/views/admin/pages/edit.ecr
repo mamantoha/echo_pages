@@ -8,7 +8,7 @@
   <body>
     <h1>Editing Page</h1>
 
-    <form action="/admin/pages/<%= uuid%>" method="post">
+    <form action="/admin/pages/<%= id%>" method="post">
       <label for="title">Title:</label><br>
       <input type="text" id="title" name="title" placeholder="Enter page title" value="<%= page[:title] %>" required><br>
       <label for="content">HTML Content:</label><br>
@@ -17,7 +17,7 @@
       <input type="submit" value="Update">
     </form>
 
-    <a href="/pages/<%= uuid%>">Show</a>
+    <a href="/pages/<%= id%>">Show</a>
     |
     <a href="/admin/pages">Back</a>
 
