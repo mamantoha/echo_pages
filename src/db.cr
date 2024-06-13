@@ -14,6 +14,7 @@ class DBHandler
     db.exec <<-SQL
       CREATE TABLE IF NOT EXISTS #{TABLE} (
         id CHAR(36) PRIMARY KEY,
+        title CHAR(256) NOT NULL,
         content TEXT NOT NULL,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
       );
@@ -26,32 +27,35 @@ class DBHandler
     end
   end
 
-  def pages : Array(NamedTuple(id: String, created_at: Time))
+  def pages : Array(NamedTuple(id: String, title: String, created_at: Time))
     DB.open(DB_PATH) do |db|
-      db.query_all("SELECT id, created_at FROM #{TABLE} ORDER BY created_at DESC", as: {id: String, created_at: Time})
+      db.query_all(
+        "SELECT id, title, created_at FROM #{TABLE} ORDER BY created_at DESC",
+        as: {id: String, title: String, created_at: Time}
+      )
     end
   end
 
-  def create_page(content : String) : String
+  def create_page(title : String, content : String) : String
     uuid = UUID.random.to_s
 
     DB.open(DB_PATH) do |db|
-      db.exec("INSERT INTO #{TABLE} (id, content) values (?, ?)", uuid, content)
+      db.exec("INSERT INTO #{TABLE} (id, title, content) values (?, ?, ?)", uuid, title, content)
     end
     # => DB::ExecResult(@rows_affected=1, @last_insert_id=6)
 
     uuid
   end
 
-  def update_page(uuid : String, content : String) : DB::ExecResult
+  def update_page(uuid : String, title : String, content : String) : DB::ExecResult
     DB.open(DB_PATH) do |db|
-      db.exec("UPDATE #{TABLE} SET content = ? WHERE id = ?", content, uuid)
+      db.exec("UPDATE #{TABLE} SET title = ?, content = ? WHERE id = ?", title, content, uuid)
     end
   end
 
-  def get_page_content(uuid : String) : String?
+  def get_page(uuid : String) : NamedTuple(title: String, content: String)?
     DB.open(DB_PATH) do |db|
-      db.query_one?("SELECT content FROM #{TABLE} WHERE id = ?", uuid, as: String)
+      db.query_one?("SELECT title, content FROM #{TABLE} WHERE id = ?", uuid, as: {title: String, content: String})
     end
   end
 

@@ -11,8 +11,11 @@ server = HTTP::Server.new do |context|
   when "/"
     case context.request.method
     when "POST"
-      if content = context.request.form_params["content"]
-        id = db_handler.create_page(content)
+      title = context.request.form_params["title"]
+      content = context.request.form_params["content"]
+
+      if title && content
+        id = db_handler.create_page(title, content)
 
         context.response.redirect("/pages/#{id}")
       else
@@ -28,9 +31,9 @@ server = HTTP::Server.new do |context|
     when "GET"
       uuid = $1
 
-      if content = db_handler.get_page_content(uuid)
+      if page = db_handler.get_page(uuid)
         context.response.content_type = "text/html; charset=utf-8"
-        context.response.print content
+        context.response.print page[:content]
       else
         context.response.respond_with_status(:not_found, "Page not found")
       end
@@ -51,7 +54,7 @@ server = HTTP::Server.new do |context|
     when "GET"
       uuid = $1
 
-      if content = db_handler.get_page_content(uuid)
+      if page = db_handler.get_page(uuid)
         context.response.print ECR.render("#{__DIR__}/views/admin/pages/edit.ecr")
       else
         context.response.respond_with_status(:not_found, "Page not found")
@@ -75,8 +78,11 @@ server = HTTP::Server.new do |context|
     when "POST"
       uuid = $1
 
-      if content = context.request.form_params["content"]
-        db_handler.update_page(uuid, content)
+      title = context.request.form_params["title"]
+      content = context.request.form_params["content"]
+
+      if title && content
+        db_handler.update_page(uuid, title, content)
 
         context.response.redirect("/pages/#{uuid}")
       end
