@@ -40,7 +40,7 @@ server = HTTP::Server.new do |context|
     else
       context.response.respond_with_status(:method_not_allowed)
     end
-  when /^\/admin\/pages(\/)?$/
+  when /^\/admin\/pages\/?$/
     case context.request.method
     when "GET"
       current_page = (context.request.query_params["page"]? || "1").to_i
@@ -64,7 +64,7 @@ server = HTTP::Server.new do |context|
     else
       context.response.respond_with_status(:method_not_allowed)
     end
-  when /^\/admin\/pages\/(.*)\/edit(\/)?$/
+  when /^\/admin\/pages\/(.*)\/edit\/?$/
     case context.request.method
     when "GET"
       id = $1
@@ -77,7 +77,7 @@ server = HTTP::Server.new do |context|
     else
       context.response.respond_with_status(:method_not_allowed)
     end
-  when /^\/admin\/pages\/(.*)\/delete(\/)?$/
+  when /^\/admin\/pages\/(.*)\/delete\/?$/
     case context.request.method
     when "POST"
       id = $1
@@ -88,7 +88,7 @@ server = HTTP::Server.new do |context|
     else
       context.response.respond_with_status(:method_not_allowed)
     end
-  when /^\/admin\/pages\/(.*)(\/)?$/
+  when /^\/admin\/pages\/(.*)\/?$/
     case context.request.method
     when "POST"
       id = $1
