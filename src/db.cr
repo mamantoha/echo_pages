@@ -43,7 +43,7 @@ class DBHandler
     pages
   end
 
-  def save_html(content : String) : String
+  def create_html_page(content : String) : String
     uuid = UUID.random.to_s
 
     DB.open(DB_PATH) do |db|
@@ -54,7 +54,7 @@ class DBHandler
     uuid
   end
 
-  def update_html(uuid : String, content : String) : DB::ExecResult
+  def update_html_page(uuid : String, content : String) : DB::ExecResult
     DB.open(DB_PATH) do |db|
       db.exec("UPDATE #{TABLE} SET html_content = ? WHERE id = ?", content, uuid)
     end

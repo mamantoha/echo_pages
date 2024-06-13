@@ -12,7 +12,7 @@ server = HTTP::Server.new do |context|
     case context.request.method
     when "POST"
       if html_content = context.request.form_params["html_content"]
-        id = db_handler.save_html(html_content)
+        id = db_handler.create_html_page(html_content)
 
         context.response.redirect("/pages/#{id}")
       else
@@ -65,6 +65,7 @@ server = HTTP::Server.new do |context|
       uuid = $1
 
       db_handler.delete_html_page(uuid)
+
       context.response.redirect("/admin/pages")
     else
       context.response.respond_with_status(:method_not_allowed)
@@ -75,7 +76,7 @@ server = HTTP::Server.new do |context|
       uuid = $1
 
       if html_content = context.request.form_params["html_content"]
-        db_handler.update_html(uuid, html_content)
+        db_handler.update_html_page(uuid, html_content)
 
         context.response.redirect("/pages/#{uuid}")
       end
