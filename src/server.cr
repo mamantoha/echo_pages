@@ -56,11 +56,7 @@ server = HTTP::Server.new do |context|
 
         pages = db_handler.pages(current_page, per_page)
 
-        if pages.empty?
-          context.response.respond_with_status(:not_found)
-        else
-          context.response.print ECR.render("#{__DIR__}/views/admin/pages/index.ecr")
-        end
+        context.response.print ECR.render("#{__DIR__}/views/admin/pages/index.ecr")
       end
     else
       context.response.respond_with_status(:method_not_allowed)
