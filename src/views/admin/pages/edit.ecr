@@ -32,7 +32,7 @@
         <label for="title">Title:</label><br>
         <input type="text" id="title" name="title" placeholder="Enter page title" value="<%= page.title %>" required><br>
         <label for="content">HTML Content:</label><br>
-        <textarea id="content" name="content" rows="10" cols="50" placeholder="Paste your HTML here" required><%= HTML.escape(page.content) %></textarea><br>
+        <textarea id="content" name="content" rows="20" cols="90" placeholder="Paste your HTML here" required><%= HTML.escape(page.content) %></textarea><br>
         <br>
         <input type="submit" value="Update">
       </form>
