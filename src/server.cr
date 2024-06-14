@@ -80,6 +80,8 @@ server = HTTP::Server.new do |context|
       if current_page < 1
         context.response.respond_with_status(:not_found)
       else
+        csrf_token = SessionStore.generate_csrf_token(session_id)
+
         total_entries = db_handler.pages_count
         per_page = 100
 
@@ -112,9 +114,15 @@ server = HTTP::Server.new do |context|
     when "POST"
       id = $1
 
-      db_handler.delete_page(id)
+      csrf_token = context.request.form_params["csrf_token"]?
 
-      context.response.redirect("/admin/pages")
+      if csrf_token && SessionStore.valid_csrf_token?(session_id, csrf_token)
+        db_handler.delete_page(id)
+
+        context.response.redirect("/admin/pages")
+      else
+        context.response.respond_with_status(:bad_request, "Invalid or missing CSRF token")
+      end
     else
       context.response.respond_with_status(:method_not_allowed)
     end

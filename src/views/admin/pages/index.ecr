@@ -123,6 +123,7 @@
                 <a href="/pages/<%= page.id %>">Show</a>
                 <a href="/admin/pages/<%= page.id %>/edit">Edit</a>
                 <form action="/admin/pages/<%= page.id %>/delete" method="post" style="display: inline;">
+                  <input type="hidden" name="csrf_token" value="<%= csrf_token %>">
                   <input type="submit" class="delete-link" value="Delete" onclick="return confirm('Are you sure you want to delete this page?');">
                 </form>
               </div>
