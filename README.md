@@ -1,6 +1,6 @@
 # EchoPages
 
-`EchoPages` is a simple web service built with the Crystal programming language.
+`EchoPages` is a single-binary web service built with the Crystal programming language.
 It allows users to submit HTML content and receive a unique URL to access it, making it possible for sharing and testing HTML snippets.
 The service utilizes SQLite as its database backend.
 
@@ -8,6 +8,12 @@ The service utilizes SQLite as its database backend.
 
 - **Crystal Programming Language**: Make sure you have Crystal installed on your system. For installation instructions, visit [Crystal Installation Guide](https://crystal-lang.org/install/).
 - **SQLite**: This project uses SQLite. Ensure SQLite3 is installed and accessible in your environment.
+
+## Build from source
+
+- Clone the repository: `git clone git@github.com:mamantoha/echo_pages.git`
+- Build with `shards build` from project directory
+- Run it as `./bin/echo_pages` or copy it to executable path
 
 ## Live Demo
 
