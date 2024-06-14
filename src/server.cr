@@ -3,6 +3,7 @@ require "uuid"
 require "html"
 require "http/server"
 require "./db"
+require "./helpers"
 
 db_handler = DBHandler.new
 
