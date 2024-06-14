@@ -22,6 +22,14 @@
         text-align: left;
       }
 
+      .flex-table .th.page_id, .flex-table .td.page_id {
+        flex: 2;
+      }
+
+      .flex-table .th.page_title, .flex-table .td.page_title {
+        flex: 3;
+      }
+
       .flex-table .th {
         font-weight: bold;
         background-color: #e1e1e1;
@@ -78,7 +86,7 @@
       <div class="thead">
         <div class="tr">
           <div class="th page_id">ID</div>
-          <div class="th">Title</div>
+          <div class="th page_title">Title</div>
           <div class="th">Created at</div>
           <div class="th">Actions</div>
         </div>
@@ -87,7 +95,7 @@
         <% pages.each do |page| %>
           <div class="tr">
             <div class="td page_id"><%= page.id %></div>
-            <div class="td"><%= Helpers.truncate(page.title, 36) %></div>
+            <div class="td page_title"><%= Helpers.truncate(page.title, 36) %></div>
             <div class="td"><%= page.created_at %></div>
             <div class="td actions">
               <a href="/pages/<%= page.id %>">Show</a>
