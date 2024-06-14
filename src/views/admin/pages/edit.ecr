@@ -4,22 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EchoPage: <%= page.title %></title>
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+      }
+
+      main {
+        flex: 1;
+        padding: 0 10px;
+      }
+
+      footer {
+        background: #f1f1f1;
+        text-align: center;
+        padding: 20px 0;
+      }
+    </style>
   </head>
   <body>
-    <h1>Editing Page</h1>
+    <main>
+      <h1>Editing Page</h1>
 
-    <form action="/admin/pages/<%= id%>" method="post">
-      <label for="title">Title:</label><br>
-      <input type="text" id="title" name="title" placeholder="Enter page title" value="<%= page.title %>" required><br>
-      <label for="content">HTML Content:</label><br>
-      <textarea id="content" name="content" rows="10" cols="50" placeholder="Paste your HTML here" required><%= HTML.escape(page.content) %></textarea><br>
-      <br>
-      <input type="submit" value="Update">
-    </form>
+      <form action="/admin/pages/<%= id%>" method="post">
+        <label for="title">Title:</label><br>
+        <input type="text" id="title" name="title" placeholder="Enter page title" value="<%= page.title %>" required><br>
+        <label for="content">HTML Content:</label><br>
+        <textarea id="content" name="content" rows="10" cols="50" placeholder="Paste your HTML here" required><%= HTML.escape(page.content) %></textarea><br>
+        <br>
+        <input type="submit" value="Update">
+      </form>
 
-    <a href="/pages/<%= id%>">Show</a>
-    |
-    <a href="/admin/pages">Back</a>
+      <a href="/pages/<%= id%>">Show</a>
+      |
+      <a href="/admin/pages">Back</a>
+    </main>
 
     <footer>
       <p>Build with Crystal <%= Crystal::VERSION %> © 2024</p>
