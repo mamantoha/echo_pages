@@ -5,6 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EchoPages</title>
     <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+      }
+
+      main {
+        flex: 1;
+        padding: 0 10px;
+      }
+
+      footer {
+        background: #f1f1f1;
+        text-align: center;
+        padding: 20px 0;
+      }
+
       .flex-table .thead, .flex-table .tbody {
         display: flex;
         flex-direction: column;
@@ -64,51 +82,52 @@
     </style>
   </head>
   <body>
-    <h1>Pages</h1>
+    <main>
+      <h1>Pages</h1>
 
-    <% if total_entries > per_page %>
-      <div>
-        <% if current_page > 1 %>
-          <a href="/admin/pages?page=<%= current_page - 1 %>">Previous</a>
-        <% else %>
-          <a role="link" aria-disabled="true">Previous</a>
-        <% end %>
+      <% if total_entries > per_page %>
+        <div>
+          <% if current_page > 1 %>
+            <a href="/admin/pages?page=<%= current_page - 1 %>">Previous</a>
+          <% else %>
+            <a role="link" aria-disabled="true">Previous</a>
+          <% end %>
 
-        <% if current_page < total_pages %>
-          <a href="/admin/pages?page=<%= current_page + 1 %>">Next</a>
-        <% else %>
-          <a role="link" aria-disabled="true">Next</a>
-        <% end %>
-      </div>
-    <% end %>
+          <% if current_page < total_pages %>
+            <a href="/admin/pages?page=<%= current_page + 1 %>">Next</a>
+          <% else %>
+            <a role="link" aria-disabled="true">Next</a>
+          <% end %>
+        </div>
+      <% end %>
 
-    <div class="flex-table">
-      <div class="thead">
-        <div class="tr">
-          <div class="th page_id">ID</div>
-          <div class="th page_title">Title</div>
-          <div class="th">Created at</div>
-          <div class="th">Actions</div>
+      <div class="flex-table">
+        <div class="thead">
+          <div class="tr">
+            <div class="th page_id">ID</div>
+            <div class="th page_title">Title</div>
+            <div class="th">Created at</div>
+            <div class="th">Actions</div>
+          </div>
+        </div>
+        <div class="tbody">
+          <% pages.each do |page| %>
+            <div class="tr">
+              <div class="td page_id"><%= page.id %></div>
+              <div class="td page_title"><%= Helpers.truncate(page.title, 36) %></div>
+              <div class="td"><%= page.created_at %></div>
+              <div class="td actions">
+                <a href="/pages/<%= page.id %>">Show</a>
+                <a href="/admin/pages/<%= page.id %>/edit">Edit</a>
+                <form action="/admin/pages/<%= page.id %>/delete" method="post" style="display: inline;">
+                  <input type="submit" class="delete-link" value="Delete" onclick="return confirm('Are you sure you want to delete this page?');">
+                </form>
+              </div>
+            </div>
+          <% end %>
         </div>
       </div>
-      <div class="tbody">
-        <% pages.each do |page| %>
-          <div class="tr">
-            <div class="td page_id"><%= page.id %></div>
-            <div class="td page_title"><%= Helpers.truncate(page.title, 36) %></div>
-            <div class="td"><%= page.created_at %></div>
-            <div class="td actions">
-              <a href="/pages/<%= page.id %>">Show</a>
-              <a href="/admin/pages/<%= page.id %>/edit">Edit</a>
-              <form action="/admin/pages/<%= page.id %>/delete" method="post" style="display: inline;">
-                <input type="submit" class="delete-link" value="Delete" onclick="return confirm('Are you sure you want to delete this page?');">
-              </form>
-            </div>
-          </div>
-        <% end %>
-      </div>
-    </div>
-
+    </main>
 
     <footer>
       <p>Build with Crystal <%= Crystal::VERSION %> © 2024</p>
