@@ -29,11 +29,7 @@
       <h1>Editing Page</h1>
 
       <form action="/admin/pages/<%= id%>" method="post">
-        <label for="title">Title:</label><br>
-        <input type="text" id="title" name="title" placeholder="Enter page title" value="<%= page.title %>" required><br>
-        <label for="content">HTML Content:</label><br>
-        <textarea id="content" name="content" rows="20" cols="90" placeholder="Paste your HTML here" required><%= HTML.escape(page.content) %></textarea><br>
-        <br>
+        <%= ECR.render("#{__DIR__}/_form.ecr") %>
         <input type="submit" value="Update">
       </form>
 

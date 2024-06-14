@@ -5,25 +5,56 @@ require "http/server"
 require "./db"
 require "./helpers"
 
+class SessionStore
+  SESSIONS = {} of String => Hash(String, String)
+
+  def self.generate_csrf_token(session_id : String) : String
+    token = Random::Secure.hex(16)
+    session = SESSIONS[session_id] ||= {} of String => String
+    session["csrf_token"] = token
+    token
+  end
+
+  def self.valid_csrf_token?(session_id : String, token : String) : Bool
+    session = SESSIONS[session_id]?
+    session ? session["csrf_token"] == token : false
+  end
+end
+
 db_handler = DBHandler.new
 
 server = HTTP::Server.new do |context|
+  session_id =
+    (context.request.cookies["session_id"]? && context.request.cookies["session_id"].value) ||
+      Random::Secure.hex(16)
+
+  context.response.cookies["session_id"] = HTTP::Cookie.new("session_id", session_id, http_only: true)
+
   case context.request.path
   when "/"
     case context.request.method
-    when "POST"
-      title = context.request.form_params["title"]
-      content = context.request.form_params["content"]
-
-      if title && content
-        id = db_handler.create_page(title, content)
-
-        context.response.redirect("/pages/#{id}")
-      else
-        context.response.respond_with_status(:bad_request, "Bad Request: No body provided")
-      end
     when "GET"
+      csrf_token = SessionStore.generate_csrf_token(session_id)
+      page = nil
+
       context.response.print ECR.render("#{__DIR__}/views/index.ecr")
+    when "POST"
+      csrf_token = context.request.form_params["csrf_token"]?
+
+      if csrf_token && SessionStore.valid_csrf_token?(session_id, csrf_token)
+        title = context.request.form_params["title"]
+        content = context.request.form_params["content"]
+
+        if title && content
+          id = db_handler.create_page(title, content)
+
+          context.response.redirect("/pages/#{id}")
+        else
+          context.response.respond_with_status(:bad_request, "Bad Request: No body provided")
+        end
+      else
+        context.response.respond_with_status(:bad_request, "Invalid or missing CSRF token")
+      end
     else
       context.response.respond_with_status(:method_not_allowed)
     end
@@ -67,6 +98,8 @@ server = HTTP::Server.new do |context|
       id = $1
 
       if page = db_handler.page(id)
+        csrf_token = SessionStore.generate_csrf_token(session_id)
+
         context.response.print ECR.render("#{__DIR__}/views/admin/pages/edit.ecr")
       else
         context.response.respond_with_status(:not_found, "Page not found")
@@ -90,13 +123,19 @@ server = HTTP::Server.new do |context|
     when "POST"
       id = $1
 
-      title = context.request.form_params["title"]
-      content = context.request.form_params["content"]
+      csrf_token = context.request.form_params["csrf_token"]?
 
-      if title && content
-        db_handler.update_page(id, title, content)
+      if csrf_token && SessionStore.valid_csrf_token?(session_id, csrf_token)
+        title = context.request.form_params["title"]
+        content = context.request.form_params["content"]
 
-        context.response.redirect("/pages/#{id}")
+        if title && content
+          db_handler.update_page(id, title, content)
+
+          context.response.redirect("/pages/#{id}")
+        end
+      else
+        context.response.respond_with_status(:bad_request, "Invalid or missing CSRF token")
       end
     else
       context.response.respond_with_status(:method_not_allowed)

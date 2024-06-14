@@ -1,0 +1,6 @@
+<input type="hidden" name="csrf_token" value="<%= csrf_token %>">
+<label for="title">Title:</label><br>
+<input type="text" id="title" name="title" placeholder="Enter page title" value="<%= page.try(&.title) %>" required><br>
+<label for="content">HTML Content:</label><br>
+<textarea id="content" name="content" rows="20" cols="90" placeholder="Paste your HTML here" required><%= HTML.escape(page.try(&.content) || "") %></textarea><br>
+<br>
