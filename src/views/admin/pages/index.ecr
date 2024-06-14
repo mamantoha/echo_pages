@@ -114,7 +114,7 @@
           <% pages.each do |page| %>
             <div class="tr">
               <div class="td page_id"><%= page.id %></div>
-              <div class="td page_title"><%= Helpers.truncate(page.title, 36) %></div>
+              <div class="td page_title"><%= HTML.escape(Helpers.truncate(page.title, 36)) %></div>
               <div class="td"><%= page.created_at %></div>
               <div class="td actions">
                 <a href="/pages/<%= page.id %>">Show</a>
