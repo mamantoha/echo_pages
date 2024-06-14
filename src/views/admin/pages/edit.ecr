@@ -26,16 +26,23 @@
   </head>
   <body>
     <main>
-      <h1>Editing Page</h1>
+      <h1>Editing page</h1>
 
       <form action="/admin/pages/<%= id%>" method="post">
         <%= ECR.render("#{__DIR__}/_form.ecr") %>
-        <input type="submit" value="Update">
+
+        <div>
+          <input type="submit" value="Update Page">
+        </div>
       </form>
 
-      <a href="/pages/<%= id%>">Show</a>
-      |
-      <a href="/admin/pages">Back</a>
+      <br>
+
+      <div>
+        <a href="/pages/<%= id%>">Show this page</a>
+        |
+        <a href="/admin/pages">Back to pages</a>
+      </div>
     </main>
 
     <footer>
