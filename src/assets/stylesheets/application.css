@@ -1,0 +1,77 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+  padding: 0 10px;
+}
+
+footer {
+  background: #f1f1f1;
+  text-align: center;
+  padding: 20px 0;
+}
+
+.flex-table .thead, .flex-table .tbody {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-table .thead .tr {
+  gap: 10px;
+}
+
+.flex-table .tr {
+  display: flex;
+  align-items: center;
+}
+
+.flex-table .th, .flex-table .td {
+  flex: 1;
+  padding: 16px;
+  text-align: left;
+}
+
+.flex-table .th.page_id, .flex-table .td.page_id {
+  flex: 2;
+}
+
+.flex-table .th.page_title, .flex-table .td.page_title {
+  flex: 3;
+}
+
+.flex-table .th {
+  font-weight: bold;
+  background-color: #e1e1e1;
+}
+
+.flex-table .td.actions {
+  display: flex;
+  justify-content: space-around;
+}
+
+.flex-table .th {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-weight: bold;
+}
+
+.flex-table .tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.delete-link {
+  background: none;
+  color: blue;
+  border: none;
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: inherit;
+  padding: 0;
+}
