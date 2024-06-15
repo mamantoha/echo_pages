@@ -45,8 +45,7 @@ server = HTTP::Server.new(
 
   case context.request.path
   when "/favicon.ico"
-    icon_path = "#{__DIR__}/assets/images/favicon.ico"
-    icon_content = File.read(icon_path)
+    icon_content = {{ read_file("#{__DIR__}/assets/images/favicon.ico") }}
 
     context.response.content_type = "image/x-icon"
     context.response.print icon_content
