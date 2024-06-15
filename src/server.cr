@@ -31,7 +31,12 @@ end
 
 db_handler = DBHandler.new
 
-server = HTTP::Server.new do |context|
+server = HTTP::Server.new(
+  [
+    HTTP::LogHandler.new,
+    HTTP::CompressHandler.new,
+  ]
+) do |context|
   session_id =
     (context.request.cookies["session_id"]? && context.request.cookies["session_id"].value) ||
       Random::Secure.hex(16)
@@ -39,6 +44,12 @@ server = HTTP::Server.new do |context|
   context.response.cookies["session_id"] = HTTP::Cookie.new("session_id", session_id, http_only: true)
 
   case context.request.path
+  when "/favicon.ico"
+    icon_path = "#{__DIR__}/assets/images/favicon.ico"
+    icon_content = File.read(icon_path)
+
+    context.response.content_type = "image/x-icon"
+    context.response.print icon_content
   when "/"
     case context.request.method
     when "GET"
