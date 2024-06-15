@@ -5,6 +5,14 @@ require "http/server"
 require "./db"
 require "./helpers"
 
+module ECR
+  macro render_with_block(layout, &block)
+    content = {{ yield }}
+
+    ECR.render {{layout}}
+  end
+end
+
 class SessionStore
   SESSIONS = {} of String => Hash(String, String)
 
@@ -37,7 +45,11 @@ server = HTTP::Server.new do |context|
       csrf_token = SessionStore.generate_csrf_token(session_id)
       page = nil
 
-      context.response.print ECR.render("#{__DIR__}/views/index.ecr")
+      content = ECR.render_with_block("#{__DIR__}/views/layouts/layout.ecr") do
+        ECR.render("#{__DIR__}/views/index.ecr")
+      end
+
+      context.response.print content
     when "POST"
       csrf_token = context.request.form_params["csrf_token"]?
 
@@ -89,7 +101,11 @@ server = HTTP::Server.new do |context|
 
         pages = db_handler.pages(current_page, per_page)
 
-        context.response.print ECR.render("#{__DIR__}/views/admin/pages/index.ecr")
+        content = ECR.render_with_block("#{__DIR__}/views/layouts/layout.ecr") do
+          ECR.render("#{__DIR__}/views/admin/pages/index.ecr")
+        end
+
+        context.response.print content
       end
     else
       context.response.respond_with_status(:method_not_allowed)
@@ -102,7 +118,11 @@ server = HTTP::Server.new do |context|
       if page = db_handler.page(id)
         csrf_token = SessionStore.generate_csrf_token(session_id)
 
-        context.response.print ECR.render("#{__DIR__}/views/admin/pages/edit.ecr")
+        content = ECR.render_with_block("#{__DIR__}/views/layouts/layout.ecr") do
+          ECR.render("#{__DIR__}/views/admin/pages/edit.ecr")
+        end
+
+        context.response.print content
       else
         context.response.respond_with_status(:not_found, "Page not found")
       end

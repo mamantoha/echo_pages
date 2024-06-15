@@ -1,52 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EchoPage: <%= page.title %></title>
-    <style>
-      html, body {
-        height: 100%;
-        margin: 0;
-        display: flex;
-        flex-direction: column;
-      }
+<h1>Editing page</h1>
 
-      main {
-        flex: 1;
-        padding: 0 10px;
-      }
+<form action="/admin/pages/<%= id%>" method="post">
+  <%= ECR.render("#{__DIR__}/_form.ecr") %>
 
-      footer {
-        background: #f1f1f1;
-        text-align: center;
-        padding: 20px 0;
-      }
-    </style>
-  </head>
-  <body>
-    <main>
-      <h1>Editing page</h1>
+  <div>
+    <input type="submit" value="Update Page">
+  </div>
+</form>
 
-      <form action="/admin/pages/<%= id%>" method="post">
-        <%= ECR.render("#{__DIR__}/_form.ecr") %>
+<br>
 
-        <div>
-          <input type="submit" value="Update Page">
-        </div>
-      </form>
-
-      <br>
-
-      <div>
-        <a href="/pages/<%= id%>">Show this page</a>
-        |
-        <a href="/admin/pages">Back to pages</a>
-      </div>
-    </main>
-
-    <footer>
-      <p>Build with Crystal <%= Crystal::VERSION %> © 2024</p>
-    </footer>
-  </body>
-</html>
+<div>
+  <a href="/pages/<%= id%>">Show this page</a>
+  |
+  <a href="/admin/pages">Back to pages</a>
+</div>

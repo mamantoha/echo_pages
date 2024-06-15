@@ -1,140 +1,45 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EchoPages</title>
-    <style>
-      html, body {
-        height: 100%;
-        margin: 0;
-        display: flex;
-        flex-direction: column;
-      }
+<h1>Pages</h1>
 
-      main {
-        flex: 1;
-        padding: 0 10px;
-      }
+<% if total_entries > per_page %>
+  <div>
+    <% if current_page > 1 %>
+      <a href="/admin/pages?page=<%= current_page - 1 %>">Previous</a>
+    <% else %>
+      <a role="link" aria-disabled="true">Previous</a>
+    <% end %>
 
-      footer {
-        background: #f1f1f1;
-        text-align: center;
-        padding: 20px 0;
-      }
+    <% if current_page < total_pages %>
+      <a href="/admin/pages?page=<%= current_page + 1 %>">Next</a>
+    <% else %>
+      <a role="link" aria-disabled="true">Next</a>
+    <% end %>
+  </div>
+<% end %>
 
-      .flex-table .thead, .flex-table .tbody {
-        display: flex;
-        flex-direction: column;
-      }
-
-      .flex-table .thead .tr {
-        gap: 10px;
-      }
-
-      .flex-table .tr {
-        display: flex;
-        align-items: center;
-      }
-
-      .flex-table .th, .flex-table .td {
-        flex: 1;
-        padding: 16px;
-        text-align: left;
-      }
-
-      .flex-table .th.page_id, .flex-table .td.page_id {
-        flex: 2;
-      }
-
-      .flex-table .th.page_title, .flex-table .td.page_title {
-        flex: 3;
-      }
-
-      .flex-table .th {
-        font-weight: bold;
-        background-color: #e1e1e1;
-      }
-
-      .flex-table .td.actions {
-        display: flex;
-        justify-content: space-around;
-      }
-
-      .flex-table .th {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        font-weight: bold;
-      }
-
-      .delete-link {
-        background: none;
-        color: blue;
-        border: none;
-        cursor: pointer;
-        text-decoration: underline;
-        font-size: inherit;
-        padding: 0;
-      }
-
-      .flex-table .tr:nth-child(even) {
-        background-color: #f2f2f2;
-      }
-    </style>
-  </head>
-  <body>
-    <main>
-      <h1>Pages</h1>
-
-      <% if total_entries > per_page %>
-        <div>
-          <% if current_page > 1 %>
-            <a href="/admin/pages?page=<%= current_page - 1 %>">Previous</a>
-          <% else %>
-            <a role="link" aria-disabled="true">Previous</a>
-          <% end %>
-
-          <% if current_page < total_pages %>
-            <a href="/admin/pages?page=<%= current_page + 1 %>">Next</a>
-          <% else %>
-            <a role="link" aria-disabled="true">Next</a>
-          <% end %>
-        </div>
-      <% end %>
-
-      <div class="flex-table">
-        <div class="thead">
-          <div class="tr">
-            <div class="th page_id">ID</div>
-            <div class="th page_title">Title</div>
-            <div class="th">Created at</div>
-            <div class="th">Actions</div>
-          </div>
-        </div>
-        <div class="tbody">
-          <% pages.each do |page| %>
-            <div class="tr">
-              <div class="td page_id"><%= page.id %></div>
-              <div class="td page_title"><%= HTML.escape(Helpers.truncate(page.title, 36)) %></div>
-              <div class="td"><%= page.created_at %></div>
-              <div class="td actions">
-                <a href="/pages/<%= page.id %>">Show</a>
-                <a href="/admin/pages/<%= page.id %>/edit">Edit</a>
-                <form action="/admin/pages/<%= page.id %>/delete" method="post" style="display: inline;">
-                  <input type="hidden" name="csrf_token" value="<%= csrf_token %>">
-                  <input type="submit" class="delete-link" value="Delete" onclick="return confirm('Are you sure you want to delete this page?');">
-                </form>
-              </div>
-            </div>
-          <% end %>
+<div class="flex-table">
+  <div class="thead">
+    <div class="tr">
+      <div class="th page_id">ID</div>
+      <div class="th page_title">Title</div>
+      <div class="th">Created at</div>
+      <div class="th">Actions</div>
+    </div>
+  </div>
+  <div class="tbody">
+    <% pages.each do |page| %>
+      <div class="tr">
+        <div class="td page_id"><%= page.id %></div>
+        <div class="td page_title"><%= HTML.escape(Helpers.truncate(page.title, 36)) %></div>
+        <div class="td"><%= page.created_at %></div>
+        <div class="td actions">
+          <a href="/pages/<%= page.id %>">Show</a>
+          <a href="/admin/pages/<%= page.id %>/edit">Edit</a>
+          <form action="/admin/pages/<%= page.id %>/delete" method="post" style="display: inline;">
+            <input type="hidden" name="csrf_token" value="<%= csrf_token %>">
+            <input type="submit" class="delete-link" value="Delete" onclick="return confirm('Are you sure you want to delete this page?');">
+          </form>
         </div>
       </div>
-    </main>
-
-    <footer>
-      <p>Build with Crystal <%= Crystal::VERSION %> © 2024</p>
-    </footer>
-  </body>
-</html>
+    <% end %>
+  </div>
+</div>
