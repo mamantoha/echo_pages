@@ -34,7 +34,6 @@ db_handler = DBHandler.new
 server = HTTP::Server.new(
   [
     HTTP::LogHandler.new,
-    HTTP::CompressHandler.new,
   ]
 ) do |context|
   session_id =
