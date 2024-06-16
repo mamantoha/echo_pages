@@ -7,7 +7,7 @@ require "./helpers"
 
 module ECR
   macro render_with_block(layout, &block)
-    content = {{ yield }}
+    __yield__ = {{ yield }}
 
     ECR.render {{layout}}
   end
