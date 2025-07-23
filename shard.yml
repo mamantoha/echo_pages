@@ -15,6 +15,6 @@ targets:
   echo_pages:
     main: src/server.cr
 
-crystal: 1.12.1
+crystal: 1.17.1
 
 license: MIT
