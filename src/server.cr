@@ -42,6 +42,8 @@ server = HTTP::Server.new(
 
   context.response.cookies["session_id"] = HTTP::Cookie.new("session_id", session_id, http_only: true)
 
+  context.response.headers.add "X-Powered-By", "Crystal"
+
   case context.request.path
   when "/favicon.ico"
     icon_content = {{ read_file("#{__DIR__}/assets/images/favicon.ico") }}
