@@ -9,7 +9,7 @@ module ECR
   macro render_with_block(layout, &block)
     __yield__ = {{ yield }}
 
-    ECR.render {{layout}}
+    ECR.render {{ layout }}
   end
 end
 
