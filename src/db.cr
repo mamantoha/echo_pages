@@ -27,7 +27,7 @@ class DBHandler
         content TEXT NOT NULL,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
       );
-    SQL
+      SQL
   end
 
   def table_exists?(db) : Bool
