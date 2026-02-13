@@ -29,7 +29,7 @@ class SessionStore
   end
 end
 
-db_handler = DBHandler.new
+DBHandler.new
 
 server = HTTP::Server.new(
   [
@@ -69,7 +69,7 @@ server = HTTP::Server.new(
         content = context.request.form_params["content"]
 
         if title && content
-          id = db_handler.create_page(title, content)
+          id = Page.create(title: title, content: content).id
 
           context.response.redirect("/pages/#{id}")
         else
@@ -86,7 +86,7 @@ server = HTTP::Server.new(
     when "GET"
       id = $1
 
-      if page = db_handler.page(id)
+      if page = Page.find(id)
         context.response.content_type = "text/html; charset=utf-8"
         context.response.print page.content
       else
@@ -105,12 +105,13 @@ server = HTTP::Server.new(
       else
         csrf_token = SessionStore.generate_csrf_token(session_id)
 
-        total_entries = db_handler.pages_count
+        total_entries = Page.count
         per_page = 100
 
         total_pages = (total_entries // per_page) + (total_entries % per_page > 0 ? 1 : 0)
 
-        pages = db_handler.pages(current_page, per_page)
+        offset = (current_page - 1) * per_page
+        pages = Page.all(per_page, offset)
 
         content = ECR.render_with_block("#{__DIR__}/views/layouts/layout.ecr") do
           ECR.render("#{__DIR__}/views/admin/pages/index.ecr")
@@ -126,7 +127,7 @@ server = HTTP::Server.new(
     when "GET"
       id = $1
 
-      if page = db_handler.page(id)
+      if page = Page.find(id)
         csrf_token = SessionStore.generate_csrf_token(session_id)
 
         content = ECR.render_with_block("#{__DIR__}/views/layouts/layout.ecr") do
@@ -148,7 +149,7 @@ server = HTTP::Server.new(
       csrf_token = context.request.form_params["csrf_token"]?
 
       if csrf_token && SessionStore.valid_csrf_token?(session_id, csrf_token)
-        db_handler.delete_page(id)
+        Page.delete(id)
 
         context.response.redirect("/admin/pages")
       else
@@ -169,7 +170,7 @@ server = HTTP::Server.new(
         content = context.request.form_params["content"]
 
         if title && content
-          db_handler.update_page(id, title, content)
+          Page.update(id, title: title, content: content)
 
           context.response.redirect("/pages/#{id}")
         end
