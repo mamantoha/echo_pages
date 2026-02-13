@@ -3,6 +3,8 @@ require "sqlite3"
 DB_PATH = "sqlite3://#{__DIR__}/../db/echo_pages.db"
 SQL     = ::DB.open(DB_PATH)
 
+Log.setup("db, http.server", :debug)
+
 class Page
   include DB::Serializable
 
@@ -39,13 +41,12 @@ class Page
     )
   end
 
-  def self.update(id : String, **args) : Page?
+  def self.update(id : String, **args) : DB::ExecResult
     SQL.exec(
       "UPDATE #{TABLE} SET title = ?, content = ? WHERE id = ?",
       args[:title], args[:content], id
     )
-
-    find(id)
+    # => DB::ExecResult(@rows_affected=1, @last_insert_id=0)
   end
 
   def self.delete(id : String) : DB::ExecResult
